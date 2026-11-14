@@ -4,13 +4,97 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Alternative Singing Monsters</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      color: white;
+      font-family: sans-serif;
+    }
+    
+    /* Loading Screen View */
+    #loadingScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+    }
+    #loadingScreen img {
+      max-width: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+    }
+    #greenPlayBtn {
+      margin-top: 20px;
+      background-color: #28a745;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 15px 45px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    }
+    #greenPlayBtn:active {
+      transform: scale(0.96);
+    }
+
+    /* Main Game Screen (Hidden until you tap Play) */
+    #gameScreen {
+      display: none;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <h1>The Alternative Singing Monsters</h1>
-  <img src="IMG_4820.jpeg" alt="The Alternative Singing Monsters" style="max-width: 100%;">
 
-  <audio controls>
+  <!-- Loading Screen Overlay with Green Play Button -->
+  <div id="loadingScreen">
+    <img src="IMG_4820.jpeg" alt="The Alternative Singing Monsters">
+    <button id="greenPlayBtn" onclick="enterGame()">▶ PLAY GAME</button>
+  </div>
+
+  <!-- Main Game Screen -->
+  <div id="gameScreen">
+    <h1>The Alternative Singing Monsters</h1>
+    <p>Game is live! Music is playing in the background.</p>
+    <!-- You can add your game content or character elements here -->
+  </div>
+
+  <!-- Audio Player -->
+  <audio id="bgMusic" loop>
     <source src="TheAlternativeSingingMonstersLoadingScreenMusic.m4a" type="audio/mp4">
   </audio>
+
+  <script>
+    function enterGame() {
+      const audio = document.getElementById('bgMusic');
+      const loadingScreen = document.getElementById('loadingScreen');
+      const gameScreen = document.getElementById('gameScreen');
+
+      // Start the music
+      audio.play().catch(error => {
+        console.log("Audio playback error:", error);
+      });
+
+      // Hide the loading screen and reveal the game screen
+      loadingScreen.style.display = 'none';
+      gameScreen.style.display = 'block';
+    }
+  </script>
 </body>
 </html>
