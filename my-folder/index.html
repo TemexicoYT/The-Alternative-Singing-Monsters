@@ -1,1 +1,127 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Alternative Singing Monsters</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      color: white;
+      font-family: sans-serif;
+    }
+
+    #loadingScreen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      z-index: 20;
+    }
+
+    #loadingScreen img {
+      max-width: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+    }
+
+    #greenPlayBtn {
+      margin-top: 20px;
+      background-color: #28a745;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 15px 45px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    }
+
+    #gameScreen {
+      display: none;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #gameScreen img {
+      max-width: 100%;
+      max-height: 100vh;
+      object-fit: contain;
+    }
+
+    #unmuteBtn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      display: none;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      border: 2px solid white;
+      border-radius: 25px;
+      padding: 10px 18px;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 30;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loadingScreen">
+    <img src="./IMG_4820.jpeg" alt="Loading screen">
+    <button id="greenPlayBtn" onclick="enterGame()">▶ PLAY GAME</button>
+  </div>
+
+  <div id="gameScreen">
+    <img src="./IMG_4841.jpeg" alt="Game screen">
+    <button id="unmuteBtn" onclick="forcePlayAudio()">🔊 Tap for Sound</button>
+  </div>
+
+  <audio id="bgMusic" src="./TheAlternativeSingingMonstersLoadingScreenMusic.m4a" preload="auto" loop playsinline></audio>
+
+  <script>
+    const audio = document.getElementById('bgMusic');
+
+    function enterGame() {
+      const loadingScreen = document.getElementById('loadingScreen');
+      const gameScreen = document.getElementById('gameScreen');
+      const unmuteBtn = document.getElementById('unmuteBtn');
+
+      audio.volume = 1.0;
+
+      audio.play().then(() => {
+        console.log("Audio started");
+      }).catch(err => {
+        console.log("Audio blocked:", err);
+        unmuteBtn.style.display = 'block';
+      });
+
+      loadingScreen.style.display = 'none';
+      gameScreen.style.display = 'flex';
+    }
+
+    function forcePlayAudio() {
+      audio.load();
+      audio.play().then(() => {
+        document.getElementById('unmuteBtn').style.display = 'none';
+      }).catch(err => {
+        alert("Could not play audio. Make sure 'TheAlternativeSingingMonstersLoadingScreenMusic.m4a' is in the same folder as this HTML file.");
+      });
+    }
+  </script>
+</body>
+</html>
