@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -54,13 +53,72 @@
       height: 100%;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
     }
 
-    #gameScreen img {
-      max-width: 100%;
+    /* Wraps tightly around the exact boundaries of IMG_4841.jpeg */
+    #imageWrapper {
+      position: relative;
+      display: inline-block;
+      line-height: 0;
+    }
+
+    #mainBg {
+      max-width: 100vw;
       max-height: 100vh;
+      width: auto;
+      height: auto;
+      display: block;
+      user-select: none;
+    }
+
+    /* Exact Hitbox for the Wood Egg */
+    #woodEggHotspot {
+      position: absolute;
+      /* ADJUST THESE 4 PERCENTAGES TO MATCH THE WOOD EGG */
+      top: 45%;
+      left: 45%;
+      width: 8%;
+      height: 10%;
+      
+      border-radius: 50%; /* Makes the clickable area oval/egg-shaped */
+      cursor: pointer;
+      z-index: 10;
+
+      /* TEMPORARY RED GUIDE: Remove these 2 lines once aligned! */
+      border: 2px solid red;
+      background: rgba(255, 0, 0, 0.3);
+    }
+
+    /* Popup Overlay for IMG_4846.jpeg */
+    #eggModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 40;
+    }
+
+    #eggModal img {
+      max-width: 90vw;
+      max-height: 80vh;
       object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(255,255,255,0.2);
+    }
+
+    #closeModalBtn {
+      margin-top: 15px;
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
     }
 
     #unmuteBtn {
@@ -87,8 +145,18 @@
   </div>
 
   <div id="gameScreen">
-    <img src="./IMG_4841.jpeg" alt="Game screen">
+    <div id="imageWrapper">
+      <img id="mainBg" src="./IMG_4841.jpeg" alt="Game screen">
+      <!-- Only clicking inside this oval triggers the image -->
+      <div id="woodEggHotspot" onclick="openWoodEgg()"></div>
+    </div>
     <button id="unmuteBtn" onclick="forcePlayAudio()">🔊 Tap for Sound</button>
+  </div>
+
+  <!-- Modal that shows IMG_4846.jpeg when the egg is clicked -->
+  <div id="eggModal" onclick="closeWoodEgg()">
+    <img src="./IMG_4846.jpeg" alt="Wood Egg View" onclick="event.stopPropagation()">
+    <button id="closeModalBtn" onclick="closeWoodEgg()">✕ Close</button>
   </div>
 
   <audio id="bgMusic" src="./TheAlternativeSingingMonstersLoadingScreenMusic.m4a" preload="auto" loop playsinline></audio>
@@ -102,10 +170,7 @@
       const unmuteBtn = document.getElementById('unmuteBtn');
 
       audio.volume = 1.0;
-
-      audio.play().then(() => {
-        console.log("Audio started");
-      }).catch(err => {
+      audio.play().catch(err => {
         console.log("Audio blocked:", err);
         unmuteBtn.style.display = 'block';
       });
@@ -122,6 +187,22 @@
         alert("Could not play audio. Make sure 'TheAlternativeSingingMonstersLoadingScreenMusic.m4a' is in the same folder as this HTML file.");
       });
     }
+
+    function openWoodEgg() {
+      document.getElementById('eggModal').style.display = 'flex';
+    }
+
+    function closeWoodEgg() {
+      document.getElementById('eggModal').style.display = 'none';
+    }
+
+    // HELPER: Click anywhere on the background to get the exact top% and left% in your console (F12)
+    document.getElementById('mainBg').addEventListener('click', function(e) {
+      const rect = this.getBoundingClientRect();
+      const leftPercent = (((e.clientX - rect.left) / rect.width) * 100).toFixed(1);
+      const topPercent = (((e.clientY - rect.top) / rect.height) * 100).toFixed(1);
+      console.log(`Clicked at -> top: ${topPercent}%; left: ${leftPercent}%;`);
+    });
   </script>
 </body>
 </html>
